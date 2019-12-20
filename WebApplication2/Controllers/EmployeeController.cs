@@ -60,6 +60,28 @@ namespace WebApplication2.Controllers
             }
             return NoContent();
         }
+        [HttpPost]
+        public async Task<ActionResult<Employee>> CreateEmployee(Employee employee)
+        {
+            _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Employee>> DeleteEmployee(long id)
+        {
+            var book = await _context.Employees.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _context.Employees.Remove(book);
+            await _context.SaveChangesAsync();
+
+            return book;
+        }
 
         private bool EmployeeExists(long id)
         {
